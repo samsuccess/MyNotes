@@ -14,13 +14,12 @@ import android.widget.TextView;
 
 public class NoteFragment extends Fragment {
 
-    private static final String ARG_FILLING = "filling";
+    public static final String ARG_FILLING = "filling";
     private Filling filling;
 
     public NoteFragment() {
         // Required empty public constructor
     }
-
 
     public static NoteFragment newInstance(Filling filling) {
         NoteFragment fragment = new NoteFragment();
@@ -34,16 +33,14 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            filling =getArguments().getParcelable(ARG_FILLING);
+            filling = getArguments().getParcelable(ARG_FILLING);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_note, container, false);
-
     }
 
     @Override
@@ -53,5 +50,6 @@ public class NoteFragment extends Fragment {
         TextView textViewDate = view.findViewById(R.id.date);
         textViewTitle.setText(filling.getTitle());
         textViewDate.setText(filling.getDate());
+
     }
-}
+    }

@@ -8,7 +8,7 @@ public class Filling implements Parcelable {
     private String title;
     private String date;
 
-    public Filling(String title, String description, String date) {
+    public Filling(String title, String date) {
         this.title = title;
         this.date = date;
     }
