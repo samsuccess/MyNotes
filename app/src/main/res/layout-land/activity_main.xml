@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
 
     <fragment
-        android:id="@+id/list_notes"
+        android:id="@id/list_notes"
         android:name="ru.example.mynotes.NotesFragment"
-        android:layout_width="@dimen/frame_land_width"
+        android:layout_width="@dimen/fragment_land_width"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/note_container_land"
         android:layout_width="@dimen/frame_land_width"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal" />
 
 </LinearLayout>
-
