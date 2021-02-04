@@ -92,22 +92,30 @@ public class NotesFragment extends Fragment {
     }
 
     private void showPortNotes(Filling filling) {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.ARG_FILLING, filling);
-        startActivity(intent);
+        NoteFragment details = NoteFragment.newInstance(filling);
+//            details.setArguments(getIntent().getExtras());
+//// Добавим фрагмент на activity
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.note_container, details)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
+
+//        Intent intent = new Intent();
+//        intent.setClass(getActivity(), NoteActivity.class);
+//        intent.putExtra(NoteFragment.ARG_FILLING, filling);
+//        startActivity(intent);
+
 
     private void showLandNotes(Filling filling) {
         NoteFragment detail = NoteFragment.newInstance(filling);
-        FragmentActivity context = getActivity();
-        if (context != null){
-            FragmentManager fragmentManager = context.getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.note_container_land, detail);
-//               fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commit();
-        }
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.note_container_land, detail);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commitAllowingStateLoss();
+
 
     }
 }
