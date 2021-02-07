@@ -14,4 +14,8 @@
     <string name="send">send</string>
     <string name="photo">photo</string>
     <string name="delete">delete</string>
+    <string name = "navigation_drawer_open" >Open navigation drawer</string >
+    <string name = "navigation_drawer_close" >Close navigation drawer</string >
+    <string name="info">About application</string>
+    <string name="avatar">Igor Samogarov</string>
 </resources>
