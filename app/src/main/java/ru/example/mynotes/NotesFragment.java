@@ -1,27 +1,35 @@
 package ru.example.mynotes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class NotesFragment extends Fragment {
 
     public static final String CURRENT_FILLING = "CurrentFilling";
     private Filling filling;
+
     //    private int currentPosition = 0;
     private boolean isLandscape;
 
@@ -41,6 +49,8 @@ public class NotesFragment extends Fragment {
         initList(view);
     }
 
+
+
     private void initList(View view) {
         LinearLayout layoutView = (LinearLayout) view;
         String[] notes = getResources().getStringArray(R.array.notes);
@@ -55,9 +65,19 @@ public class NotesFragment extends Fragment {
                 filling = new Filling(getResources().getStringArray(R.array.notes)[fi],
                         getResources().getStringArray(R.array.date)[fi]);
                 showNotes(filling);
+
+            });
+            title.setOnLongClickListener(v -> {
+                Activity activity = requireActivity();
+                PopupMenu popupMenu = new PopupMenu(activity, v);
+                activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+                popupMenu.show();
+                return false;
             });
         }
     }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -93,8 +113,6 @@ public class NotesFragment extends Fragment {
 
     private void showPortNotes(Filling filling) {
         NoteFragment details = NoteFragment.newInstance(filling);
-//            details.setArguments(getIntent().getExtras());
-//// Добавим фрагмент на activity
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.note_container, details)
@@ -102,20 +120,13 @@ public class NotesFragment extends Fragment {
                 .commitAllowingStateLoss();
     }
 
-//        Intent intent = new Intent();
-//        intent.setClass(getActivity(), NoteActivity.class);
-//        intent.putExtra(NoteFragment.ARG_FILLING, filling);
-//        startActivity(intent);
-
-
     private void showLandNotes(Filling filling) {
         NoteFragment detail = NoteFragment.newInstance(filling);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStack();
         fragmentTransaction.replace(R.id.note_container_land, detail);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commitAllowingStateLoss();
-
-
     }
 }

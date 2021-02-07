@@ -1,21 +1,29 @@
 package ru.example.mynotes;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
 
 
 public class NoteFragment extends Fragment {
 
     public static final String ARG_FILLING = "filling";
     private Filling filling;
+    private boolean isLandscape;
 
     public NoteFragment() {
         // Required empty public constructor
@@ -40,6 +48,7 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
@@ -50,6 +59,5 @@ public class NoteFragment extends Fragment {
         TextView textViewDate = view.findViewById(R.id.date);
         textViewTitle.setText(filling.getTitle());
         textViewDate.setText(filling.getDate());
-
     }
-    }
+}
