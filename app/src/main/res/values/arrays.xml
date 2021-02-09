@@ -4,10 +4,44 @@
         <item>Запись1</item>
         <item>Запись2</item>
         <item>Запись3</item>
+        <item>Запись4</item>
+        <item>Запись5</item>
+        <item>Запись6</item>
+        <item>Запись7</item>
+        <item>Запись8</item>
+        <item>Запись9</item>
+        <item>Запись10</item>
+        <item>Запись11</item>
+        <item>Запись12</item>
+        <item>Запись13</item>
+        <item>Запись14</item>
+        <item>Запись15</item>
+        <item>Запись16</item>
+        <item>Запись17</item>
+        <item>Запись18</item>
+        <item>Запись19</item>
+        <item>Запись20</item>
     </string-array>
     <string-array name="date">
         <item>Дата1</item>
         <item>Дата2</item>
         <item>Дата3</item>
+        <item>Дата4</item>
+        <item>Дата5</item>
+        <item>Дата6</item>
+        <item>Дата7</item>
+        <item>Дата8</item>
+        <item>Дата9</item>
+        <item>Дата10</item>
+        <item>Дата11</item>
+        <item>Дата12</item>
+        <item>Дата13</item>
+        <item>Дата14</item>
+        <item>Дата15</item>
+        <item>Дата16</item>
+        <item>Дата17</item>
+        <item>Дата18</item>
+        <item>Дата19</item>
+        <item>Дата20</item>
     </string-array>
 </resources>

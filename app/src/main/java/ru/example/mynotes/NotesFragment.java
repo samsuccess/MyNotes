@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -50,22 +52,29 @@ public class NotesFragment extends Fragment {
     }
 
 
-
     private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_lines);
         String[] notes = getResources().getStringArray(R.array.notes);
-        for (int i = 0; i < notes.length; i++) {
-            String note = notes[i];
+        MyAdapter myAdapter = new MyAdapter(notes);
+        recyclerView.setAdapter(myAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        LinearLayout layoutView = (LinearLayout) view;
+        for (String note : notes) {
             TextView title = new TextView(getContext());
             title.setText(note);
-            title.setTextSize(30);
             layoutView.addView(title);
-            final int fi = i;
-            title.setOnClickListener(v -> {
-                filling = new Filling(getResources().getStringArray(R.array.notes)[fi],
-                        getResources().getStringArray(R.array.date)[fi]);
-                showNotes(filling);
+//            final int fi = i;
+            myAdapter.SetOnItemClickListener(new MyAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
 
+                    filling = new Filling(getResources().getStringArray(R.array.notes)[position],
+                            getResources().getStringArray(R.array.date)[position]);
+                    showNotes(filling);
+
+                }
             });
             title.setOnLongClickListener(v -> {
                 Activity activity = requireActivity();
@@ -76,7 +85,6 @@ public class NotesFragment extends Fragment {
             });
         }
     }
-
 
 
     @Override
