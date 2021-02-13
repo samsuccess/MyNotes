@@ -1,24 +1,35 @@
 package ru.example.mynotes;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private String[] dataSource;
-    private OnItemClickListener itemClickListener;
+    private final String[] dataSource;
+    private MyClickListener myClickListener;
+    private MyLongClickListener myLongClickListener;
 
-    public void SetOnItemClickListener(OnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
+    public void SetOnItemClickListener(MyClickListener myClickListener) {
+        this.myClickListener = myClickListener;
     }
 
-    public interface OnItemClickListener {
+    public void setMyLongClickListener(MyLongClickListener myLongClickListener) {
+        this.myLongClickListener = myLongClickListener;
+    }
+
+    public interface MyClickListener {
         void onItemClick(View view, int position);
+    }
+
+    public interface MyLongClickListener {
+        void onLongItemClick(View view, int position);
     }
 
     public MyAdapter(String[] dataSource) {
@@ -45,18 +56,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private final TextView textView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textView);
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+            textView.setOnClickListener(v -> {
+                if (myClickListener != null) {
+                    myClickListener.onItemClick(v, getAdapterPosition());
                 }
+            });
+            textView.setOnLongClickListener(v -> {
+                if (myLongClickListener != null) {
+                    myLongClickListener.onLongItemClick(v, getAdapterPosition());
+                }
+
+                return false;
             });
         }
 

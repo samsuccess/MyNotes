@@ -65,23 +65,18 @@ public class NotesFragment extends Fragment {
             TextView title = new TextView(getContext());
             title.setText(note);
             layoutView.addView(title);
-//            final int fi = i;
-            myAdapter.SetOnItemClickListener(new MyAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
+            myAdapter.SetOnItemClickListener((view1, position) -> {
 
-                    filling = new Filling(getResources().getStringArray(R.array.notes)[position],
-                            getResources().getStringArray(R.array.date)[position]);
-                    showNotes(filling);
+                filling = new Filling(getResources().getStringArray(R.array.notes)[position],
+                        getResources().getStringArray(R.array.date)[position]);
+                showNotes(filling);
 
-                }
             });
-            title.setOnLongClickListener(v -> {
+            myAdapter.setMyLongClickListener((view12, position) -> {
                 Activity activity = requireActivity();
-                PopupMenu popupMenu = new PopupMenu(activity, v);
+                PopupMenu popupMenu = new PopupMenu(activity, view12);
                 activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
                 popupMenu.show();
-                return false;
             });
         }
     }
