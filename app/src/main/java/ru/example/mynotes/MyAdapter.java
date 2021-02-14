@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private final String[] dataSource;
+//    private final String[] dataSource;
+    private final Source dataSource;
     private MyClickListener myClickListener;
     private MyLongClickListener myLongClickListener;
 
@@ -32,7 +33,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         void onLongItemClick(View view, int position);
     }
 
-    public MyAdapter(String[] dataSource) {
+    public MyAdapter(Source dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -46,12 +47,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.onBind(dataSource[position]);
+        holder.onBind(dataSource.getFilling(position));
     }
 
     @Override
     public int getItemCount() {
-        return dataSource.length;
+        return dataSource.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -75,8 +76,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             });
         }
 
-        public void onBind(String s) {
-            textView.setText(s);
+        public void onBind(Filling filling) {
+            textView.setText(filling.getTitle());
         }
     }
 }

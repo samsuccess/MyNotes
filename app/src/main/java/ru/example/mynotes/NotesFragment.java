@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -26,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Objects;
 
 
 public class NotesFragment extends Fragment {
@@ -55,37 +58,33 @@ public class NotesFragment extends Fragment {
 
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_lines);
-        String[] notes = getResources().getStringArray(R.array.notes);
-        MyAdapter myAdapter = new MyAdapter(notes);
+        Source data = new SourceImpl(getResources()).init();
+        MyAdapter myAdapter = new MyAdapter(data);
         recyclerView.setAdapter(myAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        LinearLayout layoutView = (LinearLayout) view;
-        for (String note : notes) {
-            TextView title = new TextView(getContext());
-            title.setText(note);
-            layoutView.addView(title);
-            myAdapter.SetOnItemClickListener((view1, position) -> {
+        myAdapter.SetOnItemClickListener((view1, position) -> {
 
-                filling = new Filling(getResources().getStringArray(R.array.notes)[position],
-                        getResources().getStringArray(R.array.date)[position]);
-                showNotes(filling);
+            filling = new Filling(getResources().getStringArray(R.array.notes)[position],
+                    getResources().getStringArray(R.array.date)[position]);
+            showNotes(filling);
 
-            });
-            myAdapter.setMyLongClickListener((view12, position) -> {
-                Activity activity = requireActivity();
-                PopupMenu popupMenu = new PopupMenu(activity, view12);
-                activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
-                popupMenu.show();
-            });
+        });
+        myAdapter.setMyLongClickListener((view12, position) -> {
+            Activity activity = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(activity, view12);
+            activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+            popupMenu.show();
+        });
+
+        if (getContext() != null) {
+            DividerItemDecoration itemDecoration = new
+                    DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+            itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator,
+                    null));
+            recyclerView.addItemDecoration(itemDecoration);
         }
-
-        DividerItemDecoration itemDecoration = new
-                DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator,
-                null ));
-        recyclerView.addItemDecoration(itemDecoration);
     }
 
 

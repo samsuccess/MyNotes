@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 public class Filling implements Parcelable {
 
-    private String title;
-    private String date;
+    private final String title;
+    private final String date;
 
     public Filling(String title, String date) {
         this.title = title;

@@ -18,4 +18,5 @@
     <string name = "navigation_drawer_close" >Close navigation drawer</string >
     <string name="info">About application</string>
     <string name="avatar">Igor Samogarov</string>
+    <string name="change">change</string>
 </resources>

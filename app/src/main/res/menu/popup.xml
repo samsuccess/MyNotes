@@ -5,6 +5,10 @@
         android:id = "@+id/item1_popup"
         android:orderInCategory = "10" />
     <item
+        android:title = "@string/change"
+        android:id = "@+id/change"
+        android:orderInCategory = "15" />
+    <item
         android:title = "@string/delete"
         android:id = "@+id/item2_popup"
         android:orderInCategory = "20" />
