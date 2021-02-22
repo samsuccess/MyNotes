@@ -45,83 +45,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initStart() {
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = fragmentManager.findFragmentById(R.id.note_container);
         if (isLandscape && fragment instanceof NoteFragment) {
-
             fragmentManager.popBackStack();
         } else {
             fragmentTransaction.replace(R.id.note_container, new NotesFragment())
                     .commitAllowingStateLoss();
         }
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.main, menu);
-        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = getVisibleFragment(fragmentManager);
-
-        if (isLandscape) {
-            menu.findItem(R.id.action_back).setVisible(false);
-        }
-
-        if (!isLandscape && fragment instanceof NotesFragment) {
-            menu.findItem(R.id.action_favorite).setVisible(true);
-            menu.findItem(R.id.action_add).setVisible(true);
-            menu.findItem(R.id.action_send).setVisible(true);
-            menu.findItem(R.id.action_photo).setVisible(true);
-            menu.findItem(R.id.action_back).setVisible(false);
-        }
-        if (!isLandscape && fragment instanceof NoteFragment) {
-            menu.findItem(R.id.action_favorite).setVisible(false);
-            menu.findItem(R.id.action_add).setVisible(false);
-            menu.findItem(R.id.action_send).setVisible(false);
-            menu.findItem(R.id.action_photo).setVisible(false);
-            menu.findItem(R.id.action_back).setVisible(true);
-        }
-        MenuItem search = menu.findItem(R.id.action_search); // поиск пункта меню поиска
-        SearchView searchText = (SearchView) search.getActionView(); // строка поиска
-        searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // реагирует на конец ввода поиска
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MainActivity.this, query,
-                        Toast.LENGTH_SHORT).show();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_back) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.popBackStack();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private Fragment getVisibleFragment(FragmentManager fragmentManager) {
-        List<Fragment> fragments = fragmentManager.getFragments();
-        int countFragments = fragments.size();
-        for (int i = countFragments - 1; i >= 0; i--) {
-            Fragment fragment = fragments.get(i);
-            if (fragment.isVisible())
-                return fragment;
-        }
-        return null;
     }
 }

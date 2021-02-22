@@ -3,17 +3,17 @@ package ru.example.mynotes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Filling implements Parcelable {
+public class CardFilling implements Parcelable {
 
     private final String title;
     private final String date;
 
-    public Filling(String title, String date) {
+    public CardFilling(String title, String date) {
         this.title = title;
         this.date = date;
     }
 
-    protected Filling(Parcel in) {
+    protected CardFilling(Parcel in) {
         title = in.readString();
         date = in.readString();
     }
@@ -29,15 +29,15 @@ public class Filling implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Filling> CREATOR = new Creator<Filling>() {
+    public static final Creator<CardFilling> CREATOR = new Creator<CardFilling>() {
         @Override
-        public Filling createFromParcel(Parcel in) {
-            return new Filling(in);
+        public CardFilling createFromParcel(Parcel in) {
+            return new CardFilling(in);
         }
 
         @Override
-        public Filling[] newArray(int size) {
-            return new Filling[size];
+        public CardFilling[] newArray(int size) {
+            return new CardFilling[size];
         }
     };
 

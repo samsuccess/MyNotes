@@ -1,6 +1,10 @@
 package ru.example.mynotes;
 
 public interface Source {
-    Filling getFilling(int position);
+    CardFilling getFilling(int position);
     int size();
+    void deleteData ( int position);
+    void updateData ( int position, CardFilling cardFilling);
+    void addData (CardFilling cardFilling);
+    void clearData ();
 }

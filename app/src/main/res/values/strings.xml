@@ -19,4 +19,5 @@
     <string name="info">About application</string>
     <string name="avatar">Igor Samogarov</string>
     <string name="change">change</string>
+    <string name="clear">clear</string>
 </resources>

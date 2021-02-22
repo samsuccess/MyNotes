@@ -1,16 +1,12 @@
 package ru.example.mynotes;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -24,24 +20,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Objects;
 
 
 public class NotesFragment extends Fragment {
 
     public static final String CURRENT_FILLING = "CurrentFilling";
-    private Filling filling;
-
-    //    private int currentPosition = 0;
+    private CardFilling cardFilling;
+    private Source data;
+    MyAdapter myAdapter;
+    RecyclerView recyclerView;
     private boolean isLandscape;
 
     public NotesFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,45 +46,101 @@ public class NotesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         initList(view);
     }
 
-
     private void initList(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_lines);
-        Source data = new SourceImpl(getResources()).init();
-        MyAdapter myAdapter = new MyAdapter(data);
+        recyclerView = view.findViewById(R.id.recycler_view_lines);
+        data = new SourceImpl(getResources()).init();
+        myAdapter = new MyAdapter(data, this);
         recyclerView.setAdapter(myAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         myAdapter.SetOnItemClickListener((view1, position) -> {
+            cardFilling = data.getFilling(position);
+            showNotes(cardFilling);
 
-            filling = new Filling(getResources().getStringArray(R.array.notes)[position],
-                    getResources().getStringArray(R.array.date)[position]);
-            showNotes(filling);
-
-        });
-        myAdapter.setMyLongClickListener((view12, position) -> {
-            Activity activity = requireActivity();
-            PopupMenu popupMenu = new PopupMenu(activity, view12);
-            activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
-            popupMenu.show();
         });
 
         if (getContext() != null) {
             DividerItemDecoration itemDecoration = new
                     DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-            itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator,
-                    null));
+            itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator, null));
             recyclerView.addItemDecoration(itemDecoration);
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_notes, menu);
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        MenuItem search = menu.findItem(R.id.action_search); // поиск пункта меню поиска
+        SearchView searchText = (SearchView) search.getActionView(); // строка поиска
+        searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // реагирует на конец ввода поиска
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getContext(), query,
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add:
+                data.addData(new CardFilling("Запись" + (data.size() + 1), "Дата" + (data.size() + 1)));
+                myAdapter.notifyItemInserted(data.size() - 1);
+                recyclerView.scrollToPosition(data.size() - 1);
+                myAdapter.notifyItemInserted(data.size() - 1);
+                recyclerView.scrollToPosition(data.size() - 1);
+                return true;
+            case R.id.clear:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.popup, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int position = myAdapter.getMenuPosition();
+        switch (item.getItemId()) {
+            case R.id.change:
+// Do some stuff
+                return true;
+            case R.id.delete:
+                data.deleteData(position);
+                myAdapter.notifyItemRemoved(position);
+                return true;
+            case R.id.clear:
+                data.clearData();
+                myAdapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(CURRENT_FILLING, filling);
+        outState.putParcelable(CURRENT_FILLING, cardFilling);
         super.onSaveInstanceState(outState);
     }
 
@@ -100,28 +150,28 @@ public class NotesFragment extends Fragment {
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            filling = savedInstanceState.getParcelable(CURRENT_FILLING);
+            cardFilling = savedInstanceState.getParcelable(CURRENT_FILLING);
         } else {
-            filling = new Filling(getResources().getStringArray(R.array.notes)[0],
+            cardFilling = new CardFilling(getResources().getStringArray(R.array.notes)[0],
                     getResources().getStringArray(R.array.date)[0]);
         }
 
         if (isLandscape) {
-            showLandNotes(filling);
+            showLandNotes(cardFilling);
         }
     }
 
 
-    private void showNotes(Filling filling) {
+    private void showNotes(CardFilling cardFilling) {
         if (isLandscape) {
-            showLandNotes(filling);
+            showLandNotes(cardFilling);
         } else {
-            showPortNotes(filling);
+            showPortNotes(cardFilling);
         }
     }
 
-    private void showPortNotes(Filling filling) {
-        NoteFragment details = NoteFragment.newInstance(filling);
+    private void showPortNotes(CardFilling cardFilling) {
+        NoteFragment details = NoteFragment.newInstance(cardFilling);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.note_container, details)
@@ -129,11 +179,10 @@ public class NotesFragment extends Fragment {
                 .commitAllowingStateLoss();
     }
 
-    private void showLandNotes(Filling filling) {
-        NoteFragment detail = NoteFragment.newInstance(filling);
+    private void showLandNotes(CardFilling cardFilling) {
+        NoteFragment detail = NoteFragment.newInstance(cardFilling);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentManager.popBackStack();
         fragmentTransaction.replace(R.id.note_container_land, detail);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commitAllowingStateLoss();
